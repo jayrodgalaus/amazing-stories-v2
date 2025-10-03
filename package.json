@@ -1,0 +1,27 @@
+{
+  "name": "amazing-stories-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayrodgalaus/amazing-stories-dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jayrodgalaus/amazing-stories-dev/issues"
+  },
+  "homepage": "https://github.com/jayrodgalaus/amazing-stories-dev#readme",
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0"
+  }
+}

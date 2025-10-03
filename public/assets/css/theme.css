@@ -1,0 +1,129 @@
+/* Set the width of vertical scrollbars */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px; 
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/* Change the background color of scrollbar thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Change the background color of scrollbar thumb */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+/* Change the background color of scrollbar track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+html,body{
+    height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Anaheim';
+}
+
+/* SIZING */
+.w-10{width: 10% !important;}
+.w-15{width: 15% !important;}
+.w-20{width: 20% !important;}
+.w-25{width: 25% !important;}
+.w-30{width: 30% !important;}
+.w-50{width: 50% !important;}
+.w-60{width: 60% !important;}
+.w-70{width: 70% !important;}
+.w-80{width: 80% !important;}
+.w-90{width: 90% !important;}
+.w-100{width: 100% !important;}
+.h-10{height: 10% !important;}
+.h-15{height: 15% !important;}
+.h-20{height: 20% !important;}
+.h-25{height: 25% !important;}
+.h-30{height: 30% !important;}
+.h-40{height: 40% !important;}
+.h-50{height: 50% !important;}
+.h-60{height: 60% !important;}
+.h-70{height: 70% !important;}
+.h-80{height: 80% !important;}
+.h-90{height: 90% !important;}
+.h-100{height: 100% !important;}
+.vw-10{width: 10vw !important;}
+.vw-15{width: 15vw !important;}
+.vw-20{width: 20vw !important;}
+.vw-25{width: 25vw !important;}
+.vw-30{width: 30vw !important;}
+.vw-50{width: 50vw !important;}
+.vw-75{width: 75vw !important;}
+.vw-100{width: 100vw !important;}
+.vh-10{height: 10vh !important;}
+.vh-15{height: 15vh !important;}
+.vh-20{height: 20vh !important;}
+.vh-25{height: 25vh !important;}
+.vh-30{height: 30vh !important;}
+.vh-50{height: 50vh !important;}
+.vh-75{height: 75vh !important;}
+.vh-100{height: 100vh !important;}
+
+/* COLORS */
+.bg-offwhite{background-color: #fbfbfb !important;}
+.text-theme{color:#5F249F !important;}
+.text-theme2{color:rgba(185, 224, 237, 1) !important;}
+
+/* COMPONENTS */
+.nav-link{
+    color: #888 !important;
+}
+.nav-link.active{
+    color: var(--bs-nav-link-color) !important;
+}
+
+.modal-header{
+    border-bottom: none !important;
+}
+.modal-footer{
+    border-top: none !important;
+}
+.nowrap{
+    white-space: nowrap;
+}
+
+.form-control, .form-select, .form-check-input{
+    border-width: 2px !important;
+}
+
+.offcanvas-header{
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+.offcanvas-header .btn-close{
+    position: absolute !important;
+    top: var(--bs-offcanvas-padding-y) !important; 
+    left: var(--bs-offcanvas-padding-x) !important;
+}
+.list-group-item.nav-link{cursor: pointer;}
+.list-group-item.nav-link.active{
+    color: #f1f1f1 !important;
+}
+.btn-primary{
+    background-color: #5F249F !important;
+    border-color: #46157a !important;
+}
+.btn-primary:hover{
+    background-color: #46157a !important;
+    border-color: #46157a !important;
+}
+.carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='purple' viewBox='0 0 16 16'><path d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/></svg>");
+}
+.carousel-control-next-icon{
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='purple' viewBox='0 0 16 16'><path d='M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z'/></svg>");
+}

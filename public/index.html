@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <title>C&I PH Amazing Stories</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DXC C&I PH Amazing Stories - A platform to share and celebrate commendations within the DXC community.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link href='https://fonts.googleapis.com/css?family=Anaheim' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <script src="https://alcdn.msauth.net/browser/2.16.1/js/msal-browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/powerbi-client/dist/powerbi.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
+    <script src="assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/msal.js"></script>
+    <script src="assets/js/graph.js"></script>
+    <script src="assets/js/sharepoint.js"></script>
+    <script src="assets/js/utilities.js"></script>
+    <script src="assets/js/pptgen.js"></script>
+    <script src="assets/js/ai.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+</head>
+<body>
+    <!-- Modals -->  
+        <!-- General Modal -->
+        <div class="modal fade" id="generalModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modal-title"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" class="position-relative">
+                        <p id="modal-message"></p>
+                    </div>  
+                </div>
+            </div>
+        </div>
+        <!-- Confirm Modal -->
+        <div class="modal fade" id="confirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Confirm</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" class="position-relative">
+                        <p id="confirmMessage"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="confirmModalBtn">Confirm</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="confirmModalCancel">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div id="home-page" class="position-relative">
+        <div class="d-flex flex-column align-items-center justify-content-center w-70 h-100">
+            <div id="landing" class="container px-5 text-light">
+                <h1>C&I PH Amazing Stories</h1>
+                <p class="lead mt-3 text-light">One of our company's key priorities is to celebrate and learn from each other's experience. Let's continue to inspire others through amplified storytelling, showcasing the maximum work we do for ourselves, our teams, and our clients.</p>
+                
+                <button class="btn btn-primary btn-lg" id="signIn">Sign In</button>
+                <!-- <button id="generate">Generate PPTX</button> -->
+            </div>
+            <div id="starting" class="container px-5 d-none text-light">
+                <h1>Welcome, <span class="username"></span>.</h1>
+                <p class="lead mt-3">Quickly get started by clicking on one of the options below.</p>
+                <button class="btn btn-primary mt-2 me-2 spoc-element d-none" id="openAddEntry" type="button" data-bs-toggle="offcanvas" data-bs-target="#addEntryCanvas" aria-controls="addEntryCanvas">New entry</button>
+                <button class="btn btn-primary mt-2 me-2" id="openGenerateSlide" type="button" data-bs-toggle="offcanvas" data-bs-target="#generateSlidesCanvas" aria-controls="generateSlidesCanvas">Entry List</button>
+                <button class="btn btn-primary mt-2 me-2" id="openDashboard" type="button" data-bs-toggle="offcanvas" data-bs-target="#dashboardCanvas" aria-controls="dashboardCanvas">Dashboard</button>
+                <button class="btn btn-primary mt-2 me-2 spoc-element d-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#guideQuestionsCanvas" aria-controls="guideQuestionsCanvas" id="openGuideQuestions">Guide Questions</button>
+                <button class="btn btn-secondary mt-2" type="button" id="signOut">Sign Out</button><br><br>
+                <button class="btn btn-secondary mt-2" style="display: none;" type="button" id="installBtn">Install App</button>
+            </div>
+        </div>
+        
+        
+    </div>
+    <div class="offcanvas offcanvas-end vw-100 spoc-element d-none" tabindex="-1" id="addEntryCanvas" aria-labelledby="addEntryLabel">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">New Entry</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <div class="d-flex justify-content-center w-100 mx-auto">
+                    <form class="needs-validation w-50" novalidate id="newEntryForm">
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="classificationSelect" class="mt-2 spoc-element">Commendation Classification</label>
+                                        <select class="form-select spoc-element" id="classificationSelect" aria-describedby="classificationSelect">
+                                            <option selected value="C&I PH Commendation">C&I PH Commendation</option>
+                                            <option value="Account Commendation">Account Commendation</option>
+                                            <option value="Client Commendation">Client Commendation</option>
+                                        </select>   
+                                    </div>
+                                    <div class="col">
+                                        <label for="monthDropdown" class="mt-2">For the Month of</label>
+                                        <select class="form-select" id="monthDropdown" aria-describedby="monthDropdown" required>
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <label for="entryInput" class="mt-2">Entry Title</label>
+                                <input type="text" class="form-control" id="entryInput" maxlength="64" placeholder="Maximum 64 characters" required>
+                                <div class="invalid-feedback">Please provide a valid entry title.</div>
+                            </div>
+                        </div>
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    
+                                    <div class="col">
+                                        <label for="subslDropdown" class="mt-2">SUB-SL</label>
+                                        <select class="form-select" id="subslDropdown" aria-describedby="subslDropdown" required>
+                                            <option value="" disabled selected>--Select SUB-SL--</option>
+                                            <option value="AMS-EU">AMS-EU</option>
+                                            <option value="APJ-MEA">APJ-MEA</option>
+                                            <option value="CDM Shared">CDM Shared</option>
+                                            <option value="CIBC">CIBC</option>
+                                            <option value="EAO">EAO</option>
+                                            <option value="Network">Network</option>
+                                            <option value="PM & PMO">PM & PMO</option>
+                                            <option value="PM + EAO + SDEX">PM + EAO + SDEX</option>
+                                            <option value="VPC">VPC</option>
+                                            <!-- <option value="C&I">C&I</option> -->
+                                        </select>
+                                        <div class="invalid-feedback">Please select SUB-SL.</div>
+                                    </div>
+                                    <div class="col">
+                                        <label for="accountDropdown" class="mt-2">Account</label>
+                                        <select class="form-select" id="accountDropdown" aria-describedby="accountDropdown" required>
+                                            <option value="" disabled selected>--Select an account--</option>
+                                            <option value="ADBRI">ADBRI</option>
+                                            <option value="AgGateway">AgGateway</option>
+                                            <option value="Airbus">Airbus</option>
+                                            <option value="Amcor">Amcor</option>
+                                            <option value="AON">AON</option>
+                                            <option value="AT&T">AT&T</option>
+                                            <option value="Audi">Audi</option>
+                                            <option value="Avanos">Avanos</option>
+                                            <option value="Aviva">Aviva Canada</option>
+                                            <option value="BOQ">Bank of Queensland</option>
+                                            <option value="Betafence">Betafence</option>
+                                            <option value="BlueScope">BlueScope Steel</option>
+                                            <option value="Calvo">Calvo</option>
+                                            <option value="CIBC">Canadian Imperial Bank of Commerce</option>
+                                            <option value="Coca-Cola">Coca-Cola Beverages Philippines</option>
+                                            <option value="DirecTV">DirecTV</option>
+                                            <option value="Downer">Downer</option>
+                                            <option value="Duracell">Duracell</option>
+                                            <option value="DXC Technology">DXC Technology</option>
+                                            <option value="Fischer">Fischer</option>
+                                            <option value="Glanbia">Glanbia</option>
+                                            <option value="Global Life Sciences Products and Services">Global Life Sciences Products and Services</option>
+                                            <option value="Haleon">Haleon</option>
+                                            <option value="Hanes Brands Inc.">Hanes Brands Inc.</option>
+                                            <option value="Hitachi">Hitachi Construction</option>
+                                            <option value="HF Sinclair">HF Sinclair</option>
+                                            <option value="HSC BSO">HSC BSO</option>
+                                            <option value="IAG">IAG</option>
+                                            <option value="Japan Tobacco Inc.">Japan Tobacco Inc.</option>
+                                            <option value="Jollibee Foods Corporation">Jollibee Foods Corporation</option>
+                                            <option value="Kraft Heinz">Kraft Heinz</option>
+                                            <option value="KBR">KBR</option>
+                                            <option value="Leveraged">Leveraged</option>
+                                            <option value="Latitude Financial Services">Latitude Financial Services</option>
+                                            <option value="Macquarie">Macquarie</option>
+                                            <option value="Markem-Imaje">Markem-Imaje</option>
+                                            <option value="Medmix">Medmix</option>
+                                            <option value="Microsoft">Microsoft</option>
+                                            <option value="Nestle">Nestle</option>
+                                            <option value="Nissan">Nissan</option>
+                                            <option value="ONE">Ocean Network Express</option>
+                                            <option value="Oceana">Oceana</option>
+                                            <option value="Origin">Origin Energy Services Limited</option>
+                                            <option value="Philips">Philips</option>
+                                            <option value="P&G">Proctor & Gamble</option>
+                                            <option value="Pilmico">Pilmico Foods Corporation</option>
+                                            <option value="Radisson">Radisson Hotel Group</option>
+                                            <option value="Ralph Lauren">Ralph Lauren</option>
+                                            <option value="Sabre">Sabre</option>
+                                            <option value="Serco">Serco</option>
+                                            <option value="Siam Cement Group">Siam Cement Group</option>
+                                            <option value="Sonneborn">Sonneborn</option>
+                                            <option value="Sotheby's">Sotheby's</option>
+                                            <option value="South Australian Health">South Australian Health</option>
+                                            <option value="Sulzer">Sulzer</option>
+                                            <option value="ThyssenKrupp">ThyssenKrupp</option>
+                                            <option value="Tops Markets LLC">Tops Markets LLC</option>
+                                            <option value="Toronto Dominion Bank">Toronto Dominion Bank</option>
+                                            <option value="Transport for NSW">Transport for NSW</option>
+                                            <option value="Uniper">Uniper</option>
+                                            <option value="Valeo">Valeo</option>
+                                            <option value="Ventia">Ventia</option>
+                                            <option value="Western Sydney Airport">Western Sydney Airport</option>
+                                            <option value="Western Union">Western Union</option>
+                                            <option value="Westpac">Westpac</option>
+                                            <option value="Whitehaven Coal">Whitehaven Coal</option>
+                                            <option value="W.L. Gore">W.L. Gore</option>
+                                            <option value="Worksafe Victoria">Worksafe Victoria</option>
+                                            <option value="ZF WABCO">ZF WABCO</option>
+                                            <option value="other">Others &#40;please specify&#41;</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select an account.</div>
+                                        <div style="display: none;" id="otherAccountContainer">
+                                            <input type="text" class="form-control mt-2" id="otherAccountInput" placeholder="Please specify">
+                                            <div class="invalid-feedback">Please provide a valid account name.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <label for="teamInput" class="mt-2">Team</label>
+                                <input type="text" class="form-control" id="teamInput" required placeholder="Team name">
+                                <div class="invalid-feedback">Please provide a valid team name.</div>
+                            
+                        
+                                <div class="d-flex align-items-center">
+                                    <label for="recipientInput" class="mt-2">Recipient Names</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recipientNamesInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <div class="d-flex">
+                                    <input type="text " class="form-control" id="recipientInput" placeholder="Search recipient...">
+                                    <button class="btn btn-secondary ms-2" type="button" id="otherRecipientOption"><span class="small">Others</span></button>
+                                </div>
+                                
+                                <div id="recipientDropdown"></div>
+                                <div class="d-none" id="otherRecipientContainer">
+                                    <div class="d-flex flex-column w-100">
+                                        <div>
+                                            <label class="mt-2">Is this recipient a team / individual?</label>
+                                        </div>
+                                        <div class="d-flex">
+                                            <button type="button" class="otherRecipientBtn m-1 clicked" title="Individual" data-type="Individual">
+                                                <i class="fa-solid fa-person"></i>
+                                            </button>
+                                            <button type="button" class="otherRecipientBtn m-1" data-type="Team" title="Team">
+                                                <i class="fa-solid fa-people-group"></i>
+                                            </button>
+                                        </div>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control mt-2" id="otherRecipientInput" placeholder="Name">
+                                            <input type="email" class="form-control ms-2 mt-2" id="otherRecipientEmailInput" value="no.email@dxc.com" placeholder="Email">
+                                            <button class="btn btn-primary ms-2 mt-2 small" type="button" id="addOtherRecipient">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2" id="recipientContainer"></div>
+                                <div class="d-flex align-items-center">
+                                    <label class="mt-2">Individual / Team Recognition</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recognitionInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="recognitionPill px-2 text-center" id="recognitionInput1Label">Individual</div>
+                                    <div class="recognitionPill px-2 text-center" id="recognitionInput2Label">Team</div>
+                                    <input class="float-end" type="radio" name="recognitionInput" id="recognitionInput1" style="opacity: 0;pointer-events: none;">
+                                    <input class="float-end" type="radio" name="recognitionInput" id="recognitionInput2" style="opacity: 0;pointer-events: none;">
+                                </div>
+                                
+                                <div class="d-flex align-items-center">
+                                    <label for="recipientImages" class="mt-2">Recipient Images</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recipientImagesInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <input type="file" class="form-control" id="recipientImages" name="images" accept=".png, .jpg, .jpeg" multiple>
+                                <div id="previewContainer" class="preview-section mt-2 d-flex">
+                                    <!-- Previews will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <label for="typeOfWork" class="mt-2">Type of Work</label>
+                                <select class="form-select" id="typeOfWork" aria-describedby="typeOfWork" required>
+                                    <option value="" disabled selected>--Select type of work--</option>
+                                    <option value="Automation">Automation</option>
+                                    <option value="Backup">Backup</option>
+                                    <option value="Change Management">Change Management</option>
+                                    <option value="Change Implementation">Change Implementation</option>
+                                    <option value="File Transfer">File Transfer</option>
+                                    <option value="Go Live">Go Live</option>
+                                    <option value="Hardware Refresh">Hardware Refresh</option>
+                                    <option value="Incident Management">Incident Management</option>
+                                    <option value="Innovation">Innovation</option>
+                                    <option value="Migration cutover/ Rollout">Migration cutover/ Rollout</option>
+                                    <option value="Network Monitoring">Network Monitoring</option>
+                                    <option value="Operations Support">Operations Support</option>
+                                    <option value="Patching">Patching</option>
+                                    <option value="Problem Management">Problem Management</option>
+                                    <option value="Project Implementation">Project Implementation</option>
+                                    <option value="Project Management">Project Management</option>
+                                    <option value="Server Build">Server Build</option>
+                                    <option value="Storage Migration">Storage Migration</option>
+                                    <option value="Systems Upgrade">Systems Upgrade</option>
+                                    <option value="Vulnerability Management">Vulnerability Management</option>
+                                    <option value="others">Others &#40;please specify&#41;</option>
+                                </select>
+                                <div id="otherTypeOfWorkContainer" style="display: none;">
+                                    <input type="text" class="form-control mt-2" id="otherTypeOfWorkInput" placeholder="Please specify">
+                                    <div class="invalid-feedback">Please provide a valid type of work.</div>
+                                </div>
+                                <div class="d-flex align-items-center position-relative">
+                                    <label for="businessChallengeInput" class="mt-2">Customer Challenge</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="businessChallengeInfo"><i class="fa-solid fa-info"></i></button>
+                                    <button type="button" class="mistral-button" id="mistralChallenge" contentType="Customer Challenge" textarea = "businessChallengeInput">
+                                        <img src="assets/img/dxc-robot.svg" alt="mistral-ai-icon" class="mistral-icon">
+                                        <img src="assets/img/sparkles2.svg" alt="sparkles" class="mistral-sparkles">
+                                    </button>
+                                </div>                
+                                <textarea class="form-control" id="businessChallengeInput" rows="4" required></textarea>
+                                <div class="float-end text-muted text-count">0 characters</div>
+                                <div class="invalid-feedback">Please provide a valid business challenge.</div>
+
+                                
+                                <div class="d-flex align-items-center position-relative w-100">
+                                    <label for="businessImpactInput" class="mt-2">Customer Impact</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="businessImpactInfo"><i class="fa-solid fa-info"></i></button>
+                                    <button type="button" class="mistral-button" id="mistralImpact" contentType="Customer Impact" textarea = "businessImpactInput">
+                                        <img src="assets/img/dxc-robot.svg" alt="mistral-ai-icon" class="mistral-icon">
+                                        <img src="assets/img/sparkles2.svg" alt="sparkles" class="mistral-sparkles">
+                                    </button>
+                                </div>
+                                <textarea class="form-control" id="businessImpactInput" rows="4" required></textarea>
+                                <div class="float-end text-muted text-count">0 characters</div>
+                                <div class="invalid-feedback">Please provide a valid business impact.</div>
+
+
+                                <div class="d-flex align-items-center mt-2 position-relative w-100">
+                                    <input class="form-check-input me-2" type="checkbox" id="uniquenessTickbox">
+                                    <label class="form-check-label" for="uniquenessTickbox">Add Uniqueness/Complexity</label>
+                                    <button type="button" class="info-button bg-secondary-subtle" id="uniquenessInfo"><i class="fa-solid fa-info"></i></button>
+                                    <button type="button" class="mistral-button" id="mistralUniqueness" contentType="Uniqueness of the issue" textarea = "uniquenessInput">
+                                        <img src="assets/img/dxc-robot.svg" alt="mistral-ai-icon" class="mistral-icon">
+                                        <img src="assets/img/sparkles2.svg" alt="sparkles" class="mistral-sparkles">
+                                    </button>
+                                </div>
+                                <textarea class="form-control" id="uniquenessInput" rows="4"  style="display: none;"></textarea>
+                                <div class="float-end text-muted text-count" style="display: none;">0 characters</div>
+                                <div class="invalid-feedback">Please provide a valid uniqueness/complexity.</div>
+
+
+                                <div class="d-flex align-items-center position-relative w-100">
+                                    <label for="howDXCHelpedInput" class="mt-2">How DXC Helped</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="howDXCHelpedInfo"><i class="fa-solid fa-info"></i></button>
+                                    <button type="button" class="mistral-button" id="mistralHelp" contentType="How our company helped" textarea = "howDXCHelpedInput">
+                                        <img src="assets/img/dxc-robot.svg" alt="mistral-ai-icon" class="mistral-icon">
+                                        <img src="assets/img/sparkles2.svg" alt="sparkles" class="mistral-sparkles">
+                                    </button>
+                                </div>
+                                <textarea class="form-control" id="howDXCHelpedInput" rows="4" required></textarea>
+                                <div class="float-end text-muted text-count">0 characters</div>
+                                <div class="invalid-feedback">Please provide a valid description.</div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary float-end mb-3 shadow">Submit</button>
+                    </form>
+                    <button type="button" title="Help" class="help-btn my-3 ms-3 d-flex shadow justify-content-center align-items-center" data-bs-toggle="offcanvas" data-bs-target="#helpCanvas" aria-controls="helpCanvas" data-title="New Entry Help" data-carousel="newEntryCarousel"  data-previous="addEntryCanvas"><i class="fa-solid fa-question"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100 spoc-element d-none" tabindex="-1" id="updateEntryCanvas" aria-labelledby="updateEntryCanvas">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">Update Entry</h3>
+            <button type="button" id="updateEntryCanvasClose" class="btn-close" data-bs-toggle="offcanvas" aria-label="Close" data-bs-target="#generateSlidesCanvas" aria-controls="generateSlidesCanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="container">
+                <div class="d-flex justify-content-center w-50 mx-auto">
+                    <form class="needs-validation w-100" novalidate id="updateEntryForm">
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <input type="hidden" name="updateId" id="updateId" value="">
+                                <input type="hidden" name="attachmentsToDelete" id="attachmentsToDelete" value="[]">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="updateClassificationSelect" class="mt-2 spoc-element">Commendation Classification</label>
+                                        <select class="form-select spoc-element" id="updateClassificationSelect" aria-describedby="updateClassificationSelect">
+                                            <option selected value="C&I PH Commendation">C&I PH Commendation</option>
+                                            <option value="Account Commendation">Account Commendation</option>
+                                            <option value="Client Commendation">Client Commendation</option>
+                                        </select>  
+                                    </div> 
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="updateYearInput" class="mt-2">Year</label>
+                                        <input type="number" min="2023" max="2099" class="form-control" id="updateYearInput" required placeholder="Year" step="1">
+                                    </div>
+                                    <div class="col">
+                                        <label for="updateMonthDropdown" class="mt-2">For the Month of</label>
+                                        <select class="form-select" id="updateMonthDropdown" aria-describedby="updateMonthDropdown" required>
+                                            <option value="January">January</option>
+                                            <option value="February">February</option>
+                                            <option value="March">March</option>
+                                            <option value="April">April</option>
+                                            <option value="May">May</option>
+                                            <option value="June">June</option>
+                                            <option value="July">July</option>
+                                            <option value="August">August</option>
+                                            <option value="September">September</option>
+                                            <option value="October">October</option>
+                                            <option value="November">November</option>
+                                            <option value="December">December</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="updateEntryInput" class="mt-2">Entry Title</label>
+                                        <input type="text" class="form-control" id="updateEntryInput" maxlength="64" placeholder="Maximum 64 characters" required>
+                                        <div class="invalid-feedback">Please provide a valid entry title.</div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>  
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="updateSubslDropdown" class="mt-2">SUB-SL</label>
+                                        <select class="form-select" id="updateSubslDropdown" aria-describedby="updateSubslDropdown" required>
+                                            <option value="" disabled selected>--Select SUB-SL--</option>
+                                            <option value="AMS-EU">AMS-EU</option>
+                                            <option value="APJ-MEA">APJ-MEA</option>
+                                            <option value="CDM Shared">CDM Shared</option>
+                                            <option value="CIBC">CIBC</option>
+                                            <option value="EAO">EAO</option>
+                                            <option value="Network">Network</option>
+                                            <option value="PM & PMO">PM & PMO</option>
+                                            <option value="PM + EAO + SDEX">PM + EAO + SDEX</option>
+                                            <option value="VPC">VPC</option>
+                                            <!-- <option value="C&I">C&I</option> -->
+                                        </select>
+                                        <div class="invalid-feedback">Please select SUB-SL.</div>
+                                    </div>
+                                    <div class="col">
+                                        <label for="updateAccountDropdown" class="mt-2">Account</label>
+                                        <select class="form-select" id="updateAccountDropdown" aria-describedby="updateAccountDropdown">
+                                            <option value="" disabled selected>--Select an account--</option>
+                                            <option value="ADBRI">ADBRI</option>
+                                            <option value="AgGateway">AgGateway</option>
+                                            <option value="Airbus">Airbus</option>
+                                            <option value="Amcor">Amcor</option>
+                                            <option value="AON">AON</option>
+                                            <option value="AT&T">AT&T</option>
+                                            <option value="Audi">Audi</option>
+                                            <option value="Avanos">Avanos</option>
+                                            <option value="Aviva">Aviva Canada</option>
+                                            <option value="BOQ">Bank of Queensland</option>
+                                            <option value="Betafence">Betafence</option>
+                                            <option value="BlueScope">BlueScope Steel</option>
+                                            <option value="Calvo">Calvo</option>
+                                            <option value="CIBC">Canadian Imperial Bank of Commerce</option>
+                                            <option value="Coca-Cola">Coca-Cola Beverages Philippines</option>
+                                            <option value="DirecTV">DirecTV</option>
+                                            <option value="Downer">Downer</option>
+                                            <option value="Duracell">Duracell</option>
+                                            <option value="DXC Technology">DXC Technology</option>
+                                            <option value="Fischer">Fischer</option>
+                                            <option value="Glanbia">Glanbia</option>
+                                            <option value="Global Life Sciences Products and Services">Global Life Sciences Products and Services</option>
+                                            <option value="Haleon">Haleon</option>
+                                            <option value="Hanes Brands Inc.">Hanes Brands Inc.</option>
+                                            <option value="Hitachi">Hitachi Construction</option>
+                                            <option value="HF Sinclair">HF Sinclair</option>
+                                            <option value="HSC BSO">HSC BSO</option>
+                                            <option value="IAG">IAG</option>
+                                            <option value="Japan Tobacco Inc.">Japan Tobacco Inc.</option>
+                                            <option value="Jollibee Foods Corporation">Jollibee Foods Corporation</option>
+                                            <option value="Kraft Heinz">Kraft Heinz</option>
+                                            <option value="KBR">KBR</option>
+                                            <option value="Leveraged">Leveraged</option>
+                                            <option value="Latitude Financial Services">Latitude Financial Services</option>
+                                            <option value="Macquarie">Macquarie</option>
+                                            <option value="Markem-Imaje">Markem-Imaje</option>
+                                            <option value="Medmix">Medmix</option>
+                                            <option value="Microsoft">Microsoft</option>
+                                            <option value="Nestle">Nestle</option>
+                                            <option value="Nissan">Nissan</option>
+                                            <option value="ONE">Ocean Network Express</option>
+                                            <option value="Oceana">Oceana</option>
+                                            <option value="Origin">Origin Energy Services Limited</option>
+                                            <option value="Philips">Philips</option>
+                                            <option value="P&G">Proctor & Gamble</option>
+                                            <option value="Pilmico">Pilmico Foods Corporation</option>
+                                            <option value="Radisson">Radisson Hotel Group</option>
+                                            <option value="Ralph Lauren">Ralph Lauren</option>
+                                            <option value="Sabre">Sabre</option>
+                                            <option value="Serco">Serco</option>
+                                            <option value="Siam Cement Group">Siam Cement Group</option>
+                                            <option value="Sonneborn">Sonneborn</option>
+                                            <option value="Sotheby's">Sotheby's</option>
+                                            <option value="South Australian Health">South Australian Health</option>
+                                            <option value="Sulzer">Sulzer</option>
+                                            <option value="ThyssenKrupp">ThyssenKrupp</option>
+                                            <option value="Tops Markets LLC">Tops Markets LLC</option>
+                                            <option value="Toronto Dominion Bank">Toronto Dominion Bank</option>
+                                            <option value="Transport for NSW">Transport for NSW</option>
+                                            <option value="Uniper">Uniper</option>
+                                            <option value="Valeo">Valeo</option>
+                                            <option value="Ventia">Ventia</option>
+                                            <option value="Western Sydney Airport">Western Sydney Airport</option>
+                                            <option value="Western Union">Western Union</option>
+                                            <option value="Westpac">Westpac</option>
+                                            <option value="Whitehaven Coal">Whitehaven Coal</option>
+                                            <option value="W.L. Gore">W.L. Gore</option>
+                                            <option value="Worksafe Victoria">Worksafe Victoria</option>
+                                            <option value="ZF WABCO">ZF WABCO</option>
+                                            <option value="other">Others &#40;please specify&#41;</option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select an account.</div>
+                                        <div style="display: none;" id="updateOtherAccountContainer">
+                                            <input type="text" class="form-control mt-2" id="updateOtherAccountInput" placeholder="Please specify">
+                                            <div class="invalid-feedback" id="updateOtherAccountFeedback">Please provide a valid account name.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="updateTeamInput" class="mt-2">Team</label>
+                                <input type="text" class="form-control" id="updateTeamInput" required placeholder="Team name">
+                                <div class="invalid-feedback">Please provide a valid team name.</div>
+                                <div class="d-flex align-items-center">
+                                    <label for="updateRecipientInput" class="mt-2">Recipient Names</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recipientNamesInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <div class="d-flex">
+                                    <input type="text " class="form-control" id="updateRecipientInput" placeholder="Search recipient...">
+                                    <button class="btn btn-secondary ms-2" type="button" id="updateOtherRecipientOption"><span class="small">Others</span></button>
+                                </div>
+                                <div id="updateRecipientDropdown"></div>
+                                <div class="mt-2" id="updateRecipientContainer"></div>
+                                <div class="d-none" id="updateOtherRecipientContainer">
+                                    <div class="d-flex flex-column w-100">
+                                        <div>
+                                            <label class="mt-2">Is this recipient a team / individual?</label>
+                                        </div>
+                                        <div class="d-flex">
+                                            <button type="button" class="updateOtherRecipientBtn m-1 clicked" title="Individual" data-type="Individual">
+                                                <i class="fa-solid fa-person"></i>
+                                            </button>
+                                            <button type="button" class="updateOtherRecipientBtn m-1" data-type="Team" title="Team">
+                                                <i class="fa-solid fa-people-group"></i>
+                                            </button>
+                                        </div>
+                                        <div class="d-flex">
+                                            <input type="text" class="form-control mt-2" id="updateOtherRecipientInput" placeholder="Name">
+                                            <input type="email" class="form-control ms-2 mt-2" id="updateOtherRecipientEmailInput" value="no.email@dxc.com" placeholder="Email">
+                                            <button class="btn btn-primary ms-2 mt-2 small" type="button" id="updateAddOtherRecipient">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label class="mt-2">Individual / Team Recognition</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recognitionInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="updateRecognitionPill px-2 text-center" id="updateRecognitionInput1Label">Individual</div>
+                                    <div class="updateRecognitionPill px-2 text-center" id="updateRecognitionInput2Label">Team</div>
+                                    <input class="float-end" type="radio" name="updateRecognitionInput" id="updateRecognitionInput1" style="opacity: 0;pointer-events: none;">
+                                    <input class="float-end" type="radio" name="updateRecognitionInput" id="updateRecognitionInput2" style="opacity: 0;pointer-events: none;">
+                                </div>
+                                
+                                <div class="d-flex align-items-center">
+                                    <label for="updateRecipientImages" class="mt-2">Add Recipient Images</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="recipientImagesInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <input type="file" class="form-control" id="updateRecipientImages" name="images" accept=".png, .jpg, .jpeg" multiple>
+                                <div id="updatePreviewContainer" class="preview-section mt-2 d-flex">
+                                    <!-- Previews will be added here -->
+                                </div>
+                                <label for="" class="mt-2">Existing Images</label>
+                                <div id="existingPreviewContainer" class="preview-section mt-2 d-flex">
+                                    No images.
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="card shadow my-3">
+                            <div class="card-body">
+                                <label for="updateTypeOfWork" class="mt-2">Type of Work</label>
+                                <select class="form-select" id="updateTypeOfWork" aria-describedby="typeOfWork" required>
+                                    <option value="" disabled selected>--Select type of work--</option>
+                                    <option value="Automation">Automation</option>
+                                    <option value="Backup">Backup</option>
+                                    <option value="Change Management">Change Management</option>
+                                    <option value="Change Implementation">Change Implementation</option>
+                                    <option value="File Transfer">File Transfer</option>
+                                    <option value="Go Live">Go Live</option>
+                                    <option value="Hardware Refresh">Hardware Refresh</option>
+                                    <option value="Incident Management">Incident Management</option>
+                                    <option value="Innovation">Innovation</option>
+                                    <option value="Migration cutover/ Rollout">Migration cutover/ Rollout</option>
+                                    <option value="Network Monitoring">Network Monitoring</option>
+                                    <option value="Operations Support">Operations Support</option>
+                                    <option value="Patching">Patching</option>
+                                    <option value="Problem Management">Problem Management</option>
+                                    <option value="Project Implementation">Project Implementation</option>
+                                    <option value="Project Management">Project Management</option>
+                                    <option value="Server Build">Server Build</option>
+                                    <option value="Storage Migration">Storage Migration</option>
+                                    <option value="Systems Upgrade">Systems Upgrade</option>
+                                    <option value="Vulnerability Management">Vulnerability Management</option>
+                                    <option value="others">Others &#40;please specify&#41;</option>
+                                </select>
+                                <div id="updateOtherTypeOfWorkContainer" style="display: none;">
+                                    <input type="text" class="form-control mt-2" id="updateOtherTypeOfWorkInput" placeholder="Please specify">
+                                    <div class="invalid-feedback">Please provide a valid type of work.</div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <label for="updateBusinessChallengeInput" class="mt-2">Customer Challenge</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="businessChallengeInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>                
+                                <textarea class="form-control" id="updateBusinessChallengeInput" rows="4" required></textarea>
+                                <div class="invalid-feedback">Please provide a valid business challenge.</div>
+                                <div class="d-flex align-items-center">
+                                    <label for="updateBusinessImpactInput" class="mt-2">Customer Impact</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="businessImpactInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <textarea class="form-control" id="updateBusinessImpactInput" rows="4" required></textarea>
+                                <div class="invalid-feedback">Please provide a valid business impact.</div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <input class="form-check-input me-2" type="checkbox" id="updateUniquenessTickbox">
+                                    <label class="form-check-label" for="updateUniquenessTickbox">Add Uniqueness/Complexity</label>
+                                    <button type="button" class="info-button bg-secondary-subtle" id="uniquenessInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <textarea class="form-control" id="updateUniquenessInput" rows="4"  style="display: none;"></textarea>
+                                <div class="invalid-feedback">Please provide a valid uniqueness/complexity.</div>
+                                <div class="d-flex align-items-center">
+                                    <label for="updateHowDXCHelpedInput" class="mt-2">How DXC Helped</label>
+                                    <button type="button" class="info-button mt-2 bg-secondary-subtle" id="howDXCHelpedInfo"><i class="fa-solid fa-info"></i></button>
+                                </div>
+                                <textarea class="form-control" id="updateHowDXCHelpedInput" rows="4" required></textarea>
+                                <div class="invalid-feedback">Please provide a valid description.</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary float-end my-3">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100 pb-3" tabindex="-1" id="generateSlidesCanvas" aria-labelledby="generateSlidesCanvas">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">Entry List</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex p-3">
+                        <div class="btn-group spoc-element d-none" role="group">
+                            <input type="radio" class="btn-check" name="entryFilter" value="1" id="entryFilter1" autocomplete="off">
+                            <label class="btn btn-sm btn-outline-primary entryFilterLabel" for="entryFilter1" value="1">All Entries</label>
+                            <input type="radio" class="btn-check" name="entryFilter" value="2" id="entryFilter2" autocomplete="off" checked>
+                            <label class="btn btn-sm btn-outline-primary entryFilterLabel" for="entryFilter2" value="2">My Entries</label>
+                            <input type="radio" class="btn-check" name="entryFilter" value="3" id="entryFilter3" autocomplete="off">
+                            <label class="btn btn-sm btn-outline-primary entryFilterLabel" for="entryFilter3" value="3">My Recognition</label>
+                        </div>
+                        <button class="btn btn-sm btn-primary entryFilterLabel other-element d-none" value="3">My Recognition</button>
+                        <div class="ms-auto d-flex">
+                            <select id="sorter" class="form-select form-select-sm me-2">
+                                <option value="0">Sort by</option>
+                                <option value="1">&uarr;Entry Date</option>
+                                <option value="2">&darr;Entry Date</option>
+                                <option value="3">&uarr;Submitter</option>
+                                <option value="4">&darr;Submitter</option>
+                                <option value="5" class="month-sort">&uarr;Month</option>
+                                <option value="6" class="month-sort">&darr;Month</option>
+                                <option value="7">&uarr;Account</option>
+                                <option value="8">&darr;Account</option>
+                            </select>
+                            <select id="subslFilter" class="form-select form-select-sm me-2 super-element d-none">
+                                <option value="All">All SUB-SL</option>
+                                <option value="AMS-EU">AMS-EU</option>
+                                <option value="APJ-MEA">APJ-MEA</option>
+                                <option value="CDM Shared">CDM Shared</option>
+                                <option value="CIBC">CIBC</option>
+                                <option value="EAO">EAO</option>
+                                <option value="Network">Network</option>
+                                <option value="PM & PMO">PM & PMO</option>
+                                <option value="PM + EAO + SDEX">PM + EAO + SDEX</option>
+                                <option value="VPC">VPC</option>
+                            </select>
+                            <select id="monthFilter" class="form-select form-select-sm">
+                                <option value="All">All Months</option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col position-relative">
+                    <button type="button" title="Help" class="help-btn my-3 ms-3 d-flex shadow justify-content-center align-items-center" data-bs-toggle="offcanvas" data-bs-target="#helpCanvas" aria-controls="helpCanvas" data-title="Entry List Help" data-carousel="entryListCarousel" data-previous="generateSlidesCanvas"><i class="fa-solid fa-question"></i></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div id="entriesContainer" class="px-3 pb-3 w-100 h-100">
+                        <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                            <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+                            <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+                            <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" id="entryPreviewContainer">
+                    <div class="card h-100">
+                        <div class="card-body h-100 scroll-hover" style="overflow-y: auto;">
+                            <div class="lead text-theme d-flex h-100 w-100 align-items-center justify-content-center" id="entryPreviewPlaceholder">Click on an entry to preview.</div>
+                            <div id="entryPreview" class="d-none px-4">
+                                <div class="h3 fw-bold text-theme" id="entryPreviewTitle"></div>
+                                <div>
+                                    <p class="text-muted mb-0">
+                                        Submitted by <span id="entryPreviewSubmittedBy"></span> on <span  id="entryPreviewSubmittedOn"></span><br>
+                                        For the month of <span id="entryPreviewMonth"></span>, <span id="entryPreviewYear"></span>
+                                    </p>
+                                    <div id="entryPreviewBadges">
+                                        <span class="badge rounded-pill text-bg-primary" id="entryPreviewSubsl"></span>
+                                        <span class="badge rounded-pill text-bg-light" id="entryPreviewTeam"></span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="h5 fw-bold text-theme">Type of Work</div>
+                                <div><p class="preview-paragraph" id="entryPreviewWorkType"></p></div>
+                                <div class="h5 fw-bold text-theme">Customer Challenge</div>
+                                <div><p class="preview-paragraph" id="entryPreviewChallenge"></p></div>
+                                <div class="h5 fw-bold text-theme">Customer Impact</div>
+                                <div><p class="preview-paragraph" id="entryPreviewImpact"></p></div>
+                                <div class="h5 fw-bold text-theme">Uniqueness/Complexity</div>
+                                <div><p class="preview-paragraph" id="entryPreviewUniqueness"></p></div>
+                                <div class="h5 fw-bold text-theme">How DXC Helped</div>
+                                <div><p class="preview-paragraph" id="entryPreviewHelp"></p></div>
+                                <div class="h5 fw-bold text-theme">Attachments</div>
+                                <div>Please view the full entry to see attachments.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col d-flex">
+                    <div><span id="selectedEntriesCount">0</span> entries selected</div>
+                    <div class="ms-auto">
+                        <button class="btn btn-primary" id="generateSlidesBtn">Generate Slides</button>
+                    </div>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100" tabindex="-1" id="dashboardCanvas" aria-labelledby="dashboardCanvas">
+        
+        <div class="offcanvas-body position-relative" style="overflow:hidden">
+            <button type="button" class="btn-close position-absolute" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <iframe title="Amazing Stories" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=3e5e36af-c72a-4025-afda-39cb9c9bd7e7&autoAuth=true&ctid=93f33571-550f-43cf-b09f-cd331338d086" frameborder="0" allowFullScreen="true"></iframe>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100" tabindex="-1" id="entryInfoCanvas" aria-labelledby="entryInfoCanvas">
+        <div class="offcanvas-header">
+            <h4 class="offcanvas-title">Entry Info</h4>
+            <button type="button" class="btn-close" data-bs-toggle="offcanvas" data-bs-target="#generateSlidesCanvas" aria-controls="generateSlidesCanvas" aria-label="Close"  id="EntryInfoClose"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="entryLoading" class="w-100 h-100 d-flex align-items-center justify-content-center">
+                <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+                <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+                <div class="spinner-grow spinner-grow-sm text-primary mx-1" role="status"></div>
+            </div>
+            <div class="d-flex w-100 h-100 justify-content-center" id="entryInfoCard" style="display: none;">
+                <div class="card shadow w-75 h-100">
+                    <div class="card-body d-flex flex-column" style="overflow: hidden; ">
+                        <div class="d-flex align-items-center">
+                            <span id="entryInfoEntry" class="h3 fw-bold w-60 text-theme">Successful Go-live of Branch and Netsec Operations </span>
+                            <img src="assets/img/logos/CIBC.jpg" id="entryInfoLogo" class="ms-auto" alt="" style="max-height: 100px; max-width: 200px;">
+                        </div>
+                        <div class="d-flex">
+                            <div class="h4 m-0"><span id="entryInfoSubSL"></span> - <span id="entryInfoTeam"></span></div>
+                        </div>
+                        <div class="text-muted">
+                            Submitted by <span id="entryInfoCreatedBy" class="fw-bold">John Doe</span> on <span id="entryInfoCreatedOn">April 22, 2025</span>. For the month of <b><span id="entryInfoMonth">April</span>, <span id="entryInfoYear">2025</span></b>
+                        </div>
+                        <hr>
+                        <div class="d-flex w-100 h-100" style="overflow-y: hidden;">
+                            <div class="card w-30 h-100 flex-column me-3" style="overflow-y: auto; min-width: fit-content;">
+                                <div class="card-body pe-5 scroll-hover"  style="overflow-y: auto; background-color: #5F249F !important; color: white;">
+                                    <div class="h5 fw-bold">Recipients</div>
+                                    <div id="entryInfoRecipients" style="white-space: nowrap;"></div>  
+                                </div>
+    
+                            </div>
+                            
+                            <!-- <div class="h-50 mx-5" style="align-self: center; border-right: 1px solid rgba(0,0,0,0.25);"></div> -->
+                            <div class="flex-grow-1 h-100">
+                                <div class="card h-100">
+                                    <div class="card-body h-100 scroll-hover" style="overflow-y: auto;">
+                                        <div class="h5 fw-bold text-theme">Type of Work</div>
+                                        <div><p id="entryInfoWorkType"></p></div>
+                                        <div class="h5 fw-bold text-theme">Customer Challenge</div>
+                                        <div><p  id="entryInfoChallenge"></p></div>
+                                        <div class="h5 fw-bold text-theme">Customer Impact</div>
+                                        <div><p id="entryInfoImpact"></p></div>
+                                        <div class="h5 fw-bold text-theme">Uniqueness/Complexity</div>
+                                        <div><p id="entryInfoUniqueness"></p></div>
+                                        <div class="h5 fw-bold text-theme">How DXC Helped</div>
+                                        <div><p id="entryInfoHelp"></p></div>
+                                        <div class="h5 fw-bold text-theme">Attachments</div>
+                                        <div id="entryInfoImages"></div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+    
+                        
+                    </div>
+                </div>
+                <div class="d-flex flex-column ms-3" id="entryInfoActions">
+                    <button type="button" data-id="" class="entry-amplify mb-3 d-flex shadow justify-content-center align-items-center super-element" id="entryInfoAmplifyBtn"><i class="fa-solid fa-circle-up"></i></button>
+                    <button type="button" data-id="" class="entry-update mb-3 d-flex shadow justify-content-center align-items-center spoc-element" data-bs-toggle="offcanvas" data-bs-target="#updateEntryCanvas" aria-controls="updateEntryCanvas" id="entryInfoEditBtn"><i class="fa-solid fa-pen"></i></button>
+                    <button type="button" data-id="" class="entry-delete mb-3 d-flex shadow justify-content-center align-items-center spoc-element" id="entryInfoDeleteBtn"><i class="fa-solid fa-trash-can"></i></button>
+                    <button type="button" data-id="" class="entry-generate mb-3 d-flex shadow justify-content-center align-items-center" id="entryInfoGenerateSlidesBtn"><i class="fa-solid fa-file-powerpoint"></i></button>
+                    <button type="button" title="Help" class="help-btn mb-3 d-flex shadow justify-content-center align-items-center spoc-element" data-bs-toggle="offcanvas" data-bs-target="#helpCanvas" aria-controls="helpCanvas" data-title="Entry Info Help" data-carousel="entryInfoCarousel" data-previous="entryInfoCanvas"><i class="fa-solid fa-question"></i></button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100" tabindex="-1" id="guideQuestionsCanvas" aria-labelledby="guideQuestionsCanvas">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">Guide Questions</h3>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body pb-5">
+            <div class="container">
+                <div class="vh-75">
+                    <div class="row h-100">
+                        <div class="col h-100">
+                            <div class="d-flex h-100 flex-column justify-content-center">
+                                <h4 class="text-theme" >Customer Challenge</h4>
+                                <p class="lead"><b>Should answer the question “What happened”?</b><br></p>
+                                <ol>
+                                    <li>What is the background of the issue? Describe the situation</li>
+                                    <li>What issue needed to be solved/addressed? What problem caused the need for DXC to take action?</li>
+                                    <li>What is the timeline or timeframe? Did something need to be resolved quickly? Was there an issue going on for too long?</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="col h-100">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <img src="assets/img/challenge.jpg" alt="" class="w-75">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vh-75">
+                    <div class="row h-100">
+                        <div class="col h-100">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <img src="assets/img/impact.jpg" alt="" class="w-75">
+                            </div>
+                        </div>
+                        <div class="col h-100">
+                            <div class="d-flex h-100 flex-column justify-content-center">
+                                <h4 class="text-theme">Customer Impact</h4>
+                                <p>
+                                    <b  class="lead">Should answer “What was the impact to the customer?” or "How does it advance or push forward our customer first strategy/ initiative?"</b><br>
+                                    <ol>
+                                        <li>Did it support any of your customer's initiatives?</li>
+                                        <li>How did this help the customer?</li>
+                                        <li>Are there any cost savings to the customer?</li>
+                                        <li>Did it save time and efforts to the customer?</li>
+                                        <li>Did it give way to an opportunity for renewal of work/ contract extension or for additional work?</li>
+                                    </ol>
+                                </p>
+                                <p>
+                                    <b  class="lead">Quantify Results</b><br>
+                                    <ul>
+                                        <li>Cost savings of X amount/quarter to the customer</li>
+                                        <li>X amount of revenue loss of the customer if the issue was not resolved by DXC</li>
+                                        <li>Reduced effort from X hours to Y minutes</li>
+                                        <li>Reduced tickets by x % in Y months</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vh-75">
+                    <div class="row h-100">
+                        <div class="col h-100">
+                            <div class="d-flex h-100 flex-column justify-content-center">
+                                <h4 class="text-theme">Uniqueness/Complexity</h4>
+                                <p>
+                                    <b class="lead">Should answer the question “What sets this apart from others?”</b><br>
+                                    <ol>
+                                        <li>Is the action/task unique? What makes this unique? Has this not been done before?</li>
+                                        <li>What uniqueness does it introduce to the Customer/ Market?</li>
+                                        <li>What makes this complex? Is it very technical? Is it due to time constraints? Is it due to volume of work? Are there multiple factors that need to be considered simultaneously? </li>
+                                        <li>Is this an innovation?</li>
+                                    </ol>
+                                    <ul>
+                                        <li>NON-BAU is preferred</li>
+                                        <li>Can be BAU work as long as uniqueness or complexity is justified</li>
+                                        <li>Client centric –impact statement</li>
+                                    </ul>
+                                </p>
+                                <p>
+                                    The amazing stories that have been justified as unique or complex will be reviewed with Cleif and can potentially become candidates for submission to global.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col h-100">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <img src="assets/img/uniqueness.jpg" alt="" class="w-75">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vh-75">
+                    <div class="row h-100">
+                        <div class="col h-100">
+                            <div class="d-flex h-100 align-items-center justify-content-center">
+                                <img src="assets/img/help.jpg" alt="" class="w-75">
+                            </div>
+                        </div>
+                        <div class="col h-100">
+                            <div class="d-flex h-100 flex-column justify-content-center">
+                                <h4 class="text-theme">How DXC Helped</h4>
+                                <p><b class="lead">Should answer the question “What did DXC do to execute the task and how we did it?”</b><br>
+                                    What specific actions were taken?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end vw-100" tabindex="-1" id="helpCanvas" aria-labelledby="helpCanvas">
+        <div class="offcanvas-header">
+            <h3 class="offcanvas-title">New Entry Help</h3>
+            <button type="button" class="btn-close" data-bs-toggle="offcanvas" data-bs-target="#helpCanvas" aria-controls="helpCanvas"  aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="vh-75">
+                <div id="newEntryCarousel" class="carousel slide carousel-fade h-100">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 position-relative active">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture1.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture1.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture2.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture2.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture3.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture3.png"></div>
+                        </div>
+                        <div class="carousel-item h-100  position-relative super-element">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture4.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture4.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture4.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture4.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture5.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture5.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture6.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture6.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture7.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture7.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture9.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture9.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture10.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture10.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture11.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture11.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture12.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture12.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture13.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture13.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/new entry/lowres/Picture14.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/new entry/Picture14.png"></div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#newEntryCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#newEntryCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div id="entryListCarousel" class="carousel slide carousel-fade h-100">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 active position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture1.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture1.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture2.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture2.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture3.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture3.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture4.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture4.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture5.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture5.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry list/lowres/Picture8.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry list/Picture8.png"></div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#entryListCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#entryListCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                <div id="entryInfoCarousel" class="carousel slide carousel-fade h-100">
+                    <div class="carousel-inner h-100">
+                        <div class="carousel-item h-100 active super-element position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry info/lowres/Picture1.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry info/Picture1.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/entry info/lowres/Picture2.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/entry info/Picture2.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/pptgen/lowres/0.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/pptgen/0.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/pptgen/lowres/1.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/pptgen/1.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/pptgen/lowres/2.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/pptgen/2.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/pptgen/lowres/3.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/pptgen/3.png"></div>
+                        </div>
+                        <div class="carousel-item h-100 position-relative">
+                            <div class="w-100 h-100 position-absolute lowres" style="background-image: url('assets/img/tutorial/pptgen/lowres/4.png');"></div>
+                            <div class="lazy-bg w-100 h-100 position-absolute highres" data-bg="assets/img/tutorial/pptgen/4.png"></div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#entryInfoCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#entryInfoCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+
+</body>
+</html>
