@@ -1,8 +1,8 @@
 const msalConfig = {
     auth: {
-        clientId: "2211ce0f-1187-409a-9c1d-baf8a0dd577f", // Replace with your client ID
+        clientId: "179ccb33-39e8-4ecb-8bb6-932a568c3e1e", // Replace with your client ID
         authority: "https://login.microsoftonline.com/93f33571-550f-43cf-b09f-cd331338d086", // Replace with your tenant ID
-        redirectUri: "https://amazing-stories-dev.vercel.app/" // Replace with your redirect URI
+        redirectUri: "https://amazing-stories-v2.vercel.app/" // Replace with your redirect URI
     }
 
 };
