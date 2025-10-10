@@ -42,7 +42,7 @@ async function init(){
         };
         img.src = url;
     });
-    let status = await checkLoginStatus();
+    /* let status = await checkLoginStatus();
     if(status){
         getSiteAndDriveDetails();
         addFormValidation();
@@ -54,9 +54,8 @@ async function init(){
         access = await userLevel();
         dummydata();
         
-    }
-
-    $('#home-page').css('opacity', '1');
+    } */
+    // $('#home-page').css('opacity', '1');
 }
 //PWA Functions
 function registerServiceWorker() {    

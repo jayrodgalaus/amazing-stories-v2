@@ -27,6 +27,7 @@
     <script src="assets/js/ai.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
+    <script src="assets/js/login.js"></script>
 </head>
 <body>
     <!-- Modals -->  
@@ -62,6 +63,11 @@
                 </div>
             </div>
         </div>
+    <div id="login-page">
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="loginUser()">Login</button>
+    </div>
     <div id="home-page" class="position-relative">
         <div class="d-flex flex-column align-items-center justify-content-center w-70 h-100">
             <div id="landing" class="container px-5 text-light">
